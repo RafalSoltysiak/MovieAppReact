@@ -5,4 +5,6 @@ export type Movie = {
   poster_path: string | null;
   release_date: string;
   original_language: string;
+  poster_url: string;
+  $id: number;
 };
