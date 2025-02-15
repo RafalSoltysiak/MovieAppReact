@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Search from "./components/Search";
 import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
+
 import { Movie } from "./types/type";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
@@ -23,12 +24,15 @@ export default function App() {
   const [movieList, setMovieList] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (query = "") => {
     setIsLoading(true);
     setErrorMessage("");
 
     try {
-      const ednpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+      const ednpoint = query
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+
       const response = await fetch(ednpoint, API_OPTIONS);
 
       if (!response) throw new Error("Failed to fetch movies");
@@ -50,9 +54,12 @@ export default function App() {
     }
   };
 
-  useEffect(function () {
-    fetchMovies();
-  }, []);
+  useEffect(
+    function () {
+      fetchMovies(searchTerm);
+    },
+    [searchTerm]
+  );
 
   return (
     <main>
